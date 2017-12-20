@@ -1,0 +1,12 @@
+#ignore target dir
+target/
+
+#
+# IntelliJ IDEA project files
+#
+.idea*/
+.classes*/
+*.ipr
+*.iml
+*.iws
+*.ids
