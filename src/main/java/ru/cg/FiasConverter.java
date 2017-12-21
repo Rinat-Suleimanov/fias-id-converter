@@ -7,6 +7,8 @@ import javax.sql.DataSource;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.tools.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ru.cg.dao.FiasDao;
 import ru.cg.dao.SourceDao;
@@ -20,14 +22,14 @@ import ru.cg.utils.FiasIdUtils;
  */
 public class FiasConverter {
 
+  private static final Logger log = LoggerFactory.getLogger(FiasConverter.class);
+
   private static final String ID_COLUMN_TEMPLATE = "%s_id";
   private static final String SOURCE_TABLE_TEMPLATE = "%s.%s";
 
   private long count;
   private AtomicLong complete;
   private AtomicLong wrong;
-//  private long complete;
-//  private long wrong;
 
   private String idColumn;
   private String aoIdColumn;
@@ -80,8 +82,7 @@ public class FiasConverter {
                   complete.incrementAndGet();
 
                 }
-                catch (FiasException e) {
-                  e.printStackTrace();
+                catch (FiasException ignored) {
                 }
               }
           );
@@ -103,11 +104,13 @@ public class FiasConverter {
         record = fiasDao.findActual(aoId);
       }
       catch (Exception e) {
+        log.warn("Found more, than one result of guid [{}]", aoId);
         wrong.incrementAndGet();
       }
     }
 
     if (record == null) {
+      log.warn("Result of guid [{}] not found", aoId);
       wrong.incrementAndGet();
       throw new FiasException();
     }
