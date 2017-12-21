@@ -104,13 +104,13 @@ public class FiasConverter {
         record = fiasDao.findActual(aoId);
       }
       catch (Exception e) {
-        log.warn("Found more, than one result of guid [{}]", aoId);
+        log.warn("Found more, than one result for guid [{}]", aoId);
         wrong.incrementAndGet();
       }
     }
 
     if (record == null) {
-      log.warn("Result of guid [{}] not found", aoId);
+      log.warn("Result for guid [{}] not found", aoId);
       wrong.incrementAndGet();
       throw new FiasException();
     }
